@@ -205,6 +205,11 @@ rec {
     }
   ) platformVersions;
 
+  patcher = deployAndroidPackage {
+    inherit os;
+    package = packages.patcher."1";
+  };
+
   # Function that automatically links all plugins for which multiple versions can coexist
   linkPlugins = {name, plugins}:
     lib.optionalString (plugins != []) ''
@@ -295,6 +300,10 @@ rec {
           mkdir -p $targetDir
           ln -s ${addon}/libexec/android-sdk/${path} $targetDir
         '') includeExtras}
+
+      # Link patcher
+      mkdir -p $out/libexec/android-sdk/patcher
+      ln -s ${patcher}/sdk-patcher $out/libexec/android-sdk/patcher/v4
 
       # Expose common executables in bin/
       mkdir -p $out/bin
